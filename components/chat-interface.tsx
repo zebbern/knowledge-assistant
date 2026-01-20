@@ -47,11 +47,6 @@ const AI_MODELS = [
     provider: "DeepSeek",
   },
   {
-    id: "qwen/qwen3-coder:free",
-    name: "Qwen3 Coder",
-    provider: "Qwen",
-  },
-  {
     id: "z-ai/glm-4.5-air:free",
     name: "GLM 4.5 Air",
     provider: "Z.AI",
