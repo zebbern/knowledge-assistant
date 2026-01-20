@@ -1,12 +1,6 @@
 <div align="center">
 
-<kbd>
-
 ## Knowledge-Assistant
-
-<img width="150" height="150" alt="github-zebbern" src="https://github.com/user-attachments/assets/dd674bec-4858-409f-b28c-cf54e8a44ed9">
-
-</kbd>
 
 #### A free, file-based chat agent that answers questions from your custom knowledge files. Ideal for building domain-specific AI assistants or interactive documentation for GitHub projects, allowing users to query your codebase through natural conversation.
 
