@@ -15,6 +15,7 @@ import {
   RotateCcw,
   X,
   ChevronDown,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatSidebar, type ChatSession } from "@/components/chat-sidebar";
@@ -55,6 +56,10 @@ const AI_MODELS = [
 
 const DEFAULT_MODEL = AI_MODELS[0].id;
 const MODEL_KEY = "knowledge-ai-model";
+const TEMPERATURE_KEY = "knowledge-ai-temperature";
+const SYSTEM_PROMPT_KEY = "knowledge-ai-system-prompt";
+const DEFAULT_TEMPERATURE = 0.7;
+const DEFAULT_SYSTEM_PROMPT = "";
 
 /**
  * Message interface for chat history
@@ -235,6 +240,9 @@ export function ChatInterface() {
   const [showQuickQuestions, setShowQuickQuestions] = useState(true);
   const [selectedModel, setSelectedModel] = useState(DEFAULT_MODEL);
   const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
+  const [temperature, setTemperature] = useState(DEFAULT_TEMPERATURE);
+  const [systemPrompt, setSystemPrompt] = useState(DEFAULT_SYSTEM_PROMPT);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -256,6 +264,21 @@ export function ChatInterface() {
     const savedModel = localStorage.getItem(MODEL_KEY);
     if (savedModel && AI_MODELS.some((m) => m.id === savedModel)) {
       setSelectedModel(savedModel);
+    }
+
+    // Load saved temperature
+    const savedTemp = localStorage.getItem(TEMPERATURE_KEY);
+    if (savedTemp) {
+      const temp = parseFloat(savedTemp);
+      if (!isNaN(temp) && temp >= 0 && temp <= 2) {
+        setTemperature(temp);
+      }
+    }
+
+    // Load saved system prompt
+    const savedPrompt = localStorage.getItem(SYSTEM_PROMPT_KEY);
+    if (savedPrompt) {
+      setSystemPrompt(savedPrompt);
     }
 
     if (loadedSessions.length === 0) {
@@ -334,6 +357,22 @@ export function ChatInterface() {
     setSelectedModel(modelId);
     localStorage.setItem(MODEL_KEY, modelId);
     setModelDropdownOpen(false);
+  };
+
+  /**
+   * Handle temperature change
+   */
+  const handleTemperatureChange = (value: number) => {
+    setTemperature(value);
+    localStorage.setItem(TEMPERATURE_KEY, value.toString());
+  };
+
+  /**
+   * Handle system prompt change
+   */
+  const handleSystemPromptChange = (value: string) => {
+    setSystemPrompt(value);
+    localStorage.setItem(SYSTEM_PROMPT_KEY, value);
   };
 
   /**
@@ -417,6 +456,8 @@ export function ChatInterface() {
         body: JSON.stringify({
           message: messageText,
           model: selectedModel,
+          temperature: temperature,
+          customSystemPrompt: systemPrompt,
           messages: currentMessages.map((m) => ({
             role: m.role,
             content: m.content,
@@ -818,51 +859,131 @@ export function ChatInterface() {
           </div>
 
           {/* Model Selector Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium glass-card hover:bg-blue-900/30 border-blue-700/30 hover:border-blue-600/50 rounded-lg text-slate-300 transition-all"
-            >
-              <span className="text-slate-500">Model:</span>
-              <span className="text-blue-300">
-                {AI_MODELS.find((m) => m.id === selectedModel)?.name ||
-                  "Select"}
-              </span>
-              <ChevronDown
-                className={`h-3 w-3 transition-transform ${modelDropdownOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-
-            {modelDropdownOpen && (
-              <>
-                {/* Backdrop */}
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setModelDropdownOpen(false)}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <button
+                onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium glass-card hover:bg-blue-900/30 border-blue-700/30 hover:border-blue-600/50 rounded-lg text-slate-300 transition-all"
+              >
+                <span className="text-slate-500">Model:</span>
+                <span className="text-blue-300">
+                  {AI_MODELS.find((m) => m.id === selectedModel)?.name ||
+                    "Select"}
+                </span>
+                <ChevronDown
+                  className={`h-3 w-3 transition-transform ${modelDropdownOpen ? "rotate-180" : ""}`}
                 />
-                {/* Dropdown Menu */}
-                <div className="absolute right-0 top-full mt-1 z-50 min-w-[200px] glass-card rounded-lg border border-blue-700/30 shadow-xl overflow-hidden">
-                  {AI_MODELS.map((model) => (
-                    <button
-                      key={model.id}
-                      onClick={() => handleModelChange(model.id)}
-                      className={`w-full px-3 py-2 text-left text-xs hover:bg-blue-900/30 transition-colors flex items-center justify-between ${
-                        selectedModel === model.id
-                          ? "bg-blue-900/20 text-blue-300"
-                          : "text-slate-300"
-                      }`}
-                    >
-                      <span>{model.name}</span>
-                      <span className="text-slate-500 text-[10px]">
-                        {model.provider}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
+              </button>
+
+              {modelDropdownOpen && (
+                <>
+                  {/* Backdrop */}
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setModelDropdownOpen(false)}
+                  />
+                  {/* Dropdown Menu */}
+                  <div className="absolute right-0 top-full mt-1 z-50 min-w-[200px] glass-card rounded-lg border border-blue-700/30 shadow-xl overflow-hidden">
+                    {AI_MODELS.map((model) => (
+                      <button
+                        key={model.id}
+                        onClick={() => handleModelChange(model.id)}
+                        className={`w-full px-3 py-2 text-left text-xs hover:bg-blue-900/30 transition-colors flex items-center justify-between ${
+                          selectedModel === model.id
+                            ? "bg-blue-900/20 text-blue-300"
+                            : "text-slate-300"
+                        }`}
+                      >
+                        <span>{model.name}</span>
+                        <span className="text-slate-500 text-[10px]">
+                          {model.provider}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Settings Button */}
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="p-1.5 text-xs font-medium glass-card hover:bg-blue-900/30 border-blue-700/30 hover:border-blue-600/50 rounded-lg text-slate-400 hover:text-slate-200 transition-all"
+              title="Settings"
+            >
+              <Settings className="h-4 w-4" />
+            </button>
           </div>
         </div>
+
+        {/* Settings Modal */}
+        {settingsOpen && (
+          <>
+            {/* Modal Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/50 z-50"
+              onClick={() => setSettingsOpen(false)}
+            />
+            {/* Modal Content */}
+            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md glass-card rounded-xl border border-blue-700/30 shadow-2xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-white">Settings</h2>
+                <button
+                  onClick={() => setSettingsOpen(false)}
+                  className="p-1 text-slate-400 hover:text-white transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Temperature Slider */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Temperature: {temperature.toFixed(1)}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="2"
+                  step="0.1"
+                  value={temperature}
+                  onChange={(e) =>
+                    handleTemperatureChange(parseFloat(e.target.value))
+                  }
+                  className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                />
+                <div className="flex justify-between text-xs text-slate-500 mt-1">
+                  <span>Precise (0)</span>
+                  <span>Creative (2)</span>
+                </div>
+              </div>
+
+              {/* System Prompt */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Custom System Prompt
+                </label>
+                <textarea
+                  value={systemPrompt}
+                  onChange={(e) => handleSystemPromptChange(e.target.value)}
+                  placeholder="Add custom instructions for the AI (e.g., 'Always respond in bullet points' or 'Be concise')"
+                  className="w-full h-24 px-3 py-2 text-sm bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none"
+                />
+                <p className="text-xs text-slate-500 mt-1">
+                  This will be added to the system prompt for all messages.
+                </p>
+              </div>
+
+              {/* Save Button */}
+              <button
+                onClick={() => setSettingsOpen(false)}
+                className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </>
+        )}
 
         {/* Messages Container */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">

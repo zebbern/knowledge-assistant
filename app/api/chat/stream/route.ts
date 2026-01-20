@@ -35,7 +35,13 @@ async function getKnowledge(): Promise<string> {
 
 export async function POST(req: Request) {
   try {
-    const { message, model, messages: conversationHistory } = await req.json();
+    const {
+      message,
+      model,
+      temperature,
+      customSystemPrompt,
+      messages: conversationHistory,
+    } = await req.json();
 
     if (!message || typeof message !== "string") {
       return new Response(JSON.stringify({ error: "Message is required" }), {
@@ -47,8 +53,18 @@ export async function POST(req: Request) {
     // Use provided model or fallback to default
     const selectedModel = model || "xiaomi/mimo-v2-flash:free";
 
+    // Use provided temperature or fallback to default
+    const selectedTemperature =
+      typeof temperature === "number" ? temperature : 0.7;
+
     // Get knowledge from files
     const knowledge = await getKnowledge();
+
+    // Build custom prompt addition if provided
+    const customPromptSection =
+      customSystemPrompt && customSystemPrompt.trim()
+        ? `\n\nADDITIONAL INSTRUCTIONS FROM USER:\n${customSystemPrompt.trim()}`
+        : "";
 
     // Create the system prompt with knowledge context
     const systemPrompt = `You are a helpful and knowledgeable AI assistant. Your responses should be based on the following knowledge base. Be concise, friendly, and accurate.
@@ -63,7 +79,7 @@ INSTRUCTIONS:
 - If asked about something not in your knowledge base, politely say you don't have that information
 - Never make up information that isn't in your knowledge base
 - Format responses nicely with markdown when helpful
-- You have access to the conversation history - use it to maintain context`;
+- You have access to the conversation history - use it to maintain context${customPromptSection}`;
 
     // Check if API key is configured
     if (!process.env.OPENROUTER_API_KEY) {
@@ -118,7 +134,7 @@ INSTRUCTIONS:
           model: selectedModel,
           messages: apiMessages,
           max_tokens: 4096,
-          temperature: 0.7,
+          temperature: selectedTemperature,
           stream: true, // Enable streaming
         }),
       },
