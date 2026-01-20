@@ -1,37 +1,62 @@
 ---
 name: Knowledge AI
-description: A customizable chat interface that answers questions based on your provided knowledge file, perfect for domain-specific AI assistants.
+description: Free chat agent powered by your knowledge files. Build domain-specific AI assistants or interactive project docs.
 metadata:
   author: zebbern
-  version: "1.1"
+  version: "1.2"
+  repo: https://github.com/zebbern/knowledge-assistant
 ---
 
-## About This Project
+## About Knowledge AI
 
-Knowledge AI is a customizable chat interface that answers questions based on a knowledge file you provide. this allows you to
-create a specialized AI assistant tailored to your content.
+Knowledge AI is a free, file-based chat agent that answers questions from your custom knowledge files. It provides a clean Next.js chat interface that reads markdown files from a `content/` folder and uses them as context for AI responses.
 
-Project is built with Next.js and leverages OpenRouter for AI capabilities.
+### Key Features
 
-This is ideal for creating domain-specific chatbots without the need for complex vector databases or embeddings.
-Its also perfect for github repositories, documentation sites, or any scenario where you want an AI to understand your specific content or want github users to interact with your project through AI where the knowledge is sourced directly from your files.
+- **Streaming Responses** - Real-time token-by-token output
+- **Knowledge-Based Context** - AI grounded in your documentation
+- **Markdown Rendering** - Full markdown with syntax highlighting
+- **Mermaid Diagrams** - Live diagram rendering in chat
+- **Code Blocks** - Syntax-highlighted with copy functionality
+- **JSON Handling** - Collapsible JSON blocks for workflows
+- **Persistent Sessions** - Conversations stored in local storage
 
-Sessions are stored in local storage, so users can have persistent conversations based on the knowledge you provide.
+### Use Cases
+
+1. **Domain-Specific Assistants** - Create specialized AI for any topic
+2. **Project Documentation** - Let users query your GitHub repos
+3. **Internal Knowledge Bases** - Company wikis and procedures
+4. **Learning Tools** - Educational content with interactive Q&A
+
+### How It Works
+
+1. You add markdown files to the `content/` folder
+2. The API reads all `.md` and `.txt` files at request time
+3. Content is sent as context to OpenRouter
+4. AI responds based on your knowledge files
 
 ### Getting Started
 
-1. Edit this `knowledge.md` file with your own content
+1. Clone the repository
 2. Add your OpenRouter API key to `.env.local`
-3. Run `npm run dev` to start the development server
-4. Chat with your specialized AI!
+3. Replace this file with your own content
+4. Run `npm run dev` and start chatting
 
-### Customization Tips
+### Technical Stack
 
-- **Add multiple files**: Drop additional `.md` or `.txt` files in the `content/` folder
-- **Organize by topic**: Use headers (##) to structure your content
-- **Include FAQs**: Add common questions and answers
-- **Be specific**: More detailed knowledge = better responses
+- Next.js 15 with App Router
+- OpenRouter API (free models available)
+- TypeScript
+- Tailwind CSS
+- Mermaid for diagrams
+
+### Customization
+
+- **Add knowledge files**: Drop `.md` or `.txt` files in `content/`
+- **Change the model**: Edit `route.ts` to use different OpenRouter models
+- **Adjust max tokens**: Modify the API configuration as needed
+- **Style the interface**: Customize via Tailwind CSS
 
 ### Support
 
-For questions or issues, check the README.md file or open an issue on GitHub.
+Open an issue on GitHub: https://github.com/zebbern/knowledge-assistant
