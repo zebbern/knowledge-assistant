@@ -1,8 +1,19 @@
-# Knowledge AI
+<div align="center">
 
-A free, file-based chat agent that answers questions from your custom knowledge files. Ideal for building domain-specific AI assistants or interactive documentation for GitHub projects, allowing users to query your codebase through natural conversation.
+<kbd>
 
-## Overview
+## Knowledge-Assistant
+
+<img width="150" height="150" alt="github-zebbern" src="https://github.com/user-attachments/assets/dd674bec-4858-409f-b28c-cf54e8a44ed9">
+
+</kbd>
+
+#### A free, file-based chat agent that answers questions from your custom knowledge files. Ideal for building domain-specific AI assistants or interactive documentation for GitHub projects, allowing users to query your codebase through natural conversation.
+
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/eed43d7b-1406-45f2-a5e9-3fab43dd76f2" />
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/f99bead4-f62a-4b5b-bdb0-c196d15beaee" />
+
+</div>
 
 Knowledge AI loads markdown files from a `content/` directory and uses them as context for AI responses. This approach provides accurate, domain-specific answers without the complexity of vector databases or embeddings.
 
@@ -30,14 +41,37 @@ flowchart LR
     B -->|SSE Stream| A
 ```
 
-## Features
+## Quick Start
 
-- **Streaming Responses** - Real-time token-by-token response streaming
-- **Knowledge-Based Context** - AI responses grounded in your documentation
-- **Markdown Rendering** - Full markdown support with syntax highlighting
-- **Mermaid Diagrams** - Live diagram rendering in responses
-- **Code Blocks** - Syntax-highlighted code with copy functionality
-- **JSON Handling** - Collapsible JSON blocks with syntax highlighting
+### Prerequisites
+
+- Node.js 18+
+- OpenRouter API key ([get one free](https://openrouter.ai))
+
+### Installation
+
+```bash
+cd knowledge-assistance
+npm install
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your API key:
+
+```env
+OPENROUTER_API_KEY=your_api_key_here
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+### Running
+
+```bash
+npm run dev       # Development
+npm run build     # Production build
+npm start         # Start production server
+```
+
+Access the application at `http://localhost:3000`
 
 ## Architecture
 
@@ -73,38 +107,6 @@ graph TB
     MD --> MM
     MD --> CB
 ```
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- OpenRouter API key ([get one free](https://openrouter.ai))
-
-### Installation
-
-```bash
-cd knowledge-assistance
-npm install
-cp .env.example .env.local
-```
-
-Edit `.env.local` with your API key:
-
-```env
-OPENROUTER_API_KEY=your_api_key_here
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-### Running
-
-```bash
-npm run dev       # Development
-npm run build     # Production build
-npm start         # Start production server
-```
-
-Access the application at `http://localhost:3000`
 
 ## Knowledge System
 
@@ -235,19 +237,3 @@ sequenceDiagram
         Chat UI-->>User: Render token
     end
 ```
-
-## Tech Stack
-
-| Component     | Technology     |
-| ------------- | -------------- |
-| Framework     | Next.js 15     |
-| Language      | TypeScript     |
-| Styling       | Tailwind CSS   |
-| UI Components | Shadcn/UI      |
-| Markdown      | react-markdown |
-| Diagrams      | Mermaid 11     |
-| AI Provider   | OpenRouter     |
-
-## License
-
-MIT
