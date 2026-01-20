@@ -6,6 +6,8 @@
 
 <kbd>env variables needed: OPENROUTER_API_KEY, NEXT_PUBLIC_SITE_URL</kbd>
 
+<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/1f95191f-4118-4a71-9d5a-842154711408" />
+
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/eed43d7b-1406-45f2-a5e9-3fab43dd76f2" />
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/f99bead4-f62a-4b5b-bdb0-c196d15beaee" />
 
