@@ -50,14 +50,14 @@ graph TB
         CB[Code Block Component]
     end
 
-    subgraph API Layer
-        STREAM[/api/chat/stream]
-        CHAT[/api/chat]
+    subgraph API_Layer[API Layer]
+        STREAM[Stream Endpoint]
+        CHAT[Chat Endpoint]
     end
 
-    subgraph Knowledge System
+    subgraph Knowledge_System[Knowledge System]
         LOADER[File Loader]
-        CONTENT[content/]
+        CONTENT[Content Files]
     end
 
     subgraph External
