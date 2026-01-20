@@ -1,6 +1,6 @@
 # Knowledge AI
 
-A context-aware AI chat interface powered by OpenRouter and Next.js. This application enables conversational AI with domain-specific knowledge through a simple file-based knowledge system.
+A free, file-based chat agent that answers questions from your custom knowledge files. Ideal for building domain-specific AI assistants or interactive documentation for GitHub projects, allowing users to query your codebase through natural conversation.
 
 ## Overview
 
