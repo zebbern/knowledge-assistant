@@ -9,6 +9,11 @@
 
 </div>
 
+> [!Note]
+> This is meant strictly for .md/.txt files to provide the best result for the documentation provided
+
+---
+
 Knowledge AI loads markdown files from a `content/` directory and uses them as context for AI responses. This approach provides accurate, domain-specific answers without the complexity of vector databases or embeddings.
 
 ```mermaid
