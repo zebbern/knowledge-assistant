@@ -2,15 +2,47 @@
 
 ## Knowledge-Assistant
 
-#### A free, file-based chat agent that answers questions from your custom knowledge files. Ideal for building domain-specific AI assistants or interactive documentation for GitHub projects, allowing users to query your codebase through natural conversation.
+#### A lightweight, free, file-based chat agent that answers questions from your custom knowledge files. No vector databases, no embeddings, no complex setup - just drop in your markdown files and start chatting.
 
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/eed43d7b-1406-45f2-a5e9-3fab43dd76f2" />
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/f99bead4-f62a-4b5b-bdb0-c196d15beaee" />
 
 </div>
 
+## Why Lightweight?
+
+Unlike heavyweight RAG solutions that require:
+
+- Vector databases (Pinecone, Weaviate, Chroma)
+- Embedding models and preprocessing
+- Complex chunking strategies
+- Database hosting and maintenance
+
+Knowledge-Assistant takes a simpler approach:
+
+- **Just files** - Drop `.md` or `.txt` files in a folder
+- **No preprocessing** - Files are read at request time
+- **No database** - Context goes directly to the LLM
+- **Free models** - Uses OpenRouter's free tier (Llama, Mimo, DeepSeek)
+
+Perfect for: documentation sites, GitHub repos, personal knowledge bases, and projects where simplicity beats complexity.
+
 > [!Note]
 > This is meant strictly for .md/.txt files to provide the best result for the documentation provided
+
+---
+
+## Features
+
+- **Multiple Free Models** - Choose from Llama 3.3, Mimo, DeepSeek R1, Devstral, GLM
+- **Temperature Control** - Adjust creativity (0 = precise, 2 = creative)
+- **Custom System Prompts** - Add your own AI personality and instructions
+- **Streaming Responses** - Real-time token-by-token output
+- **Markdown Rendering** - Full markdown with syntax highlighting
+- **Mermaid Diagrams** - Live diagram rendering in chat
+- **Code Blocks** - Syntax-highlighted with copy functionality
+- **Persistent Sessions** - Conversations stored in localStorage
+- **Export Chat** - Download conversations as markdown
 
 ---
 
