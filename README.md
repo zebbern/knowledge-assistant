@@ -27,12 +27,7 @@ Knowledge-Assistant takes a simpler approach:
 
 Perfect for: documentation sites, GitHub repos, personal knowledge bases, and projects where simplicity beats complexity.
 
-> [!Note]
-> This is meant strictly for .md/.txt files to provide the best result for the documentation provided
-
----
-
-## Features
+<kbd>env variables needed: OPENROUTER_API_KEY, NEXT_PUBLIC_SITE_URL</kbd>
 
 - **Multiple Free Models** - Choose from Llama 3.3, Mimo, DeepSeek R1, Devstral, GLM
 - **Temperature Control** - Adjust creativity (0 = precise, 2 = creative)
