@@ -14,12 +14,27 @@ import {
   Pencil,
   RotateCcw,
   X,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatSidebar, type ChatSession } from "@/components/chat-sidebar";
 import { CodeBlock } from "@/components/mermaid";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+/**
+ * Available AI models from OpenRouter (free tier)
+ */
+const AI_MODELS = [
+  { id: "xiaomi/mimo-v2-flash:free", name: "Mimo V2 Flash", provider: "Xiaomi" },
+  { id: "deepseek/deepseek-chat-v3-0324:free", name: "DeepSeek Chat V3", provider: "DeepSeek" },
+  { id: "google/gemini-2.0-flash-exp:free", name: "Gemini 2.0 Flash", provider: "Google" },
+  { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Llama 3.3 70B", provider: "Meta" },
+  { id: "qwen/qwen3-235b-a22b:free", name: "Qwen3 235B", provider: "Qwen" },
+];
+
+const DEFAULT_MODEL = AI_MODELS[0].id;
+const MODEL_KEY = "knowledge-ai-model";
 
 /**
  * Message interface for chat history
@@ -198,6 +213,8 @@ export function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const [isImproving, setIsImproving] = useState(false);
   const [showQuickQuestions, setShowQuickQuestions] = useState(true);
+  const [selectedModel, setSelectedModel] = useState(DEFAULT_MODEL);
+  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -214,6 +231,12 @@ export function ChatInterface() {
   useEffect(() => {
     const loadedSessions = loadSessions();
     const savedActiveId = getActiveSessionId();
+    
+    // Load saved model preference
+    const savedModel = localStorage.getItem(MODEL_KEY);
+    if (savedModel && AI_MODELS.some(m => m.id === savedModel)) {
+      setSelectedModel(savedModel);
+    }
 
     if (loadedSessions.length === 0) {
       const newSession: ChatSession = {
@@ -283,6 +306,15 @@ export function ChatInterface() {
   useEffect(() => {
     adjustTextareaHeight();
   }, [input, adjustTextareaHeight]);
+
+  /**
+   * Handle model selection change
+   */
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    localStorage.setItem(MODEL_KEY, modelId);
+    setModelDropdownOpen(false);
+  };
 
   /**
    * Create new chat session
@@ -364,6 +396,7 @@ export function ChatInterface() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: messageText,
+          model: selectedModel,
           messages: currentMessages.map((m) => ({
             role: m.role,
             content: m.content,
@@ -748,21 +781,61 @@ export function ChatInterface() {
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar - Show sidebar toggle when collapsed */}
-        {sidebarCollapsed && (
-          <div className="hidden lg:flex items-center gap-2 px-4 py-2 border-b border-blue-900/10">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSidebarCollapsed(false)}
-              className="h-8 w-8 text-slate-400 hover:text-white"
-              title="Show sidebar"
-            >
-              <PanelLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-xs text-slate-500">Show chat history</span>
+        {/* Top Bar with Model Selector */}
+        <div className="flex items-center justify-between px-4 py-2 border-b border-blue-900/10">
+          <div className="flex items-center gap-2">
+            {sidebarCollapsed && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarCollapsed(false)}
+                className="hidden lg:flex h-8 w-8 text-slate-400 hover:text-white"
+                title="Show sidebar"
+              >
+                <PanelLeft className="h-4 w-4" />
+              </Button>
+            )}
           </div>
-        )}
+          
+          {/* Model Selector Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium glass-card hover:bg-blue-900/30 border-blue-700/30 hover:border-blue-600/50 rounded-lg text-slate-300 transition-all"
+            >
+              <span className="text-slate-500">Model:</span>
+              <span className="text-blue-300">
+                {AI_MODELS.find(m => m.id === selectedModel)?.name || "Select"}
+              </span>
+              <ChevronDown className={`h-3 w-3 transition-transform ${modelDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {modelDropdownOpen && (
+              <>
+                {/* Backdrop */}
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setModelDropdownOpen(false)} 
+                />
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 top-full mt-1 z-50 min-w-[200px] glass-card rounded-lg border border-blue-700/30 shadow-xl overflow-hidden">
+                  {AI_MODELS.map((model) => (
+                    <button
+                      key={model.id}
+                      onClick={() => handleModelChange(model.id)}
+                      className={`w-full px-3 py-2 text-left text-xs hover:bg-blue-900/30 transition-colors flex items-center justify-between ${
+                        selectedModel === model.id ? 'bg-blue-900/20 text-blue-300' : 'text-slate-300'
+                      }`}
+                    >
+                      <span>{model.name}</span>
+                      <span className="text-slate-500 text-[10px]">{model.provider}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
 
         {/* Messages Container */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">

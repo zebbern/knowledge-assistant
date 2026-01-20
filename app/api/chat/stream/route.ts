@@ -35,7 +35,7 @@ async function getKnowledge(): Promise<string> {
 
 export async function POST(req: Request) {
   try {
-    const { message, messages: conversationHistory } = await req.json();
+    const { message, model, messages: conversationHistory } = await req.json();
 
     if (!message || typeof message !== "string") {
       return new Response(JSON.stringify({ error: "Message is required" }), {
@@ -43,6 +43,9 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json" },
       });
     }
+
+    // Use provided model or fallback to default
+    const selectedModel = model || "xiaomi/mimo-v2-flash:free";
 
     // Get knowledge from files
     const knowledge = await getKnowledge();
@@ -112,7 +115,7 @@ INSTRUCTIONS:
           "X-Title": "Knowledge AI Chat",
         },
         body: JSON.stringify({
-          model: "xiaomi/mimo-v2-flash:free",
+          model: selectedModel,
           messages: apiMessages,
           max_tokens: 4096,
           temperature: 0.7,
