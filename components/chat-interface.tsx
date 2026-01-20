@@ -23,14 +23,19 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 /**
- * Available AI models from OpenRouter (free tier)
+ * Available AI models from OpenRouter (free tier - verified working)
  */
 const AI_MODELS = [
-  { id: "xiaomi/mimo-v2-flash:free", name: "Mimo V2 Flash", provider: "Xiaomi" },
-  { id: "deepseek/deepseek-chat-v3-0324:free", name: "DeepSeek Chat V3", provider: "DeepSeek" },
-  { id: "google/gemini-2.0-flash-exp:free", name: "Gemini 2.0 Flash", provider: "Google" },
-  { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Llama 3.3 70B", provider: "Meta" },
-  { id: "qwen/qwen3-235b-a22b:free", name: "Qwen3 235B", provider: "Qwen" },
+  {
+    id: "xiaomi/mimo-v2-flash:free",
+    name: "Mimo V2 Flash",
+    provider: "Xiaomi",
+  },
+  {
+    id: "meta-llama/llama-3.3-70b-instruct:free",
+    name: "Llama 3.3 70B",
+    provider: "Meta",
+  },
 ];
 
 const DEFAULT_MODEL = AI_MODELS[0].id;
@@ -231,10 +236,10 @@ export function ChatInterface() {
   useEffect(() => {
     const loadedSessions = loadSessions();
     const savedActiveId = getActiveSessionId();
-    
+
     // Load saved model preference
     const savedModel = localStorage.getItem(MODEL_KEY);
-    if (savedModel && AI_MODELS.some(m => m.id === savedModel)) {
+    if (savedModel && AI_MODELS.some((m) => m.id === savedModel)) {
       setSelectedModel(savedModel);
     }
 
@@ -796,7 +801,7 @@ export function ChatInterface() {
               </Button>
             )}
           </div>
-          
+
           {/* Model Selector Dropdown */}
           <div className="relative">
             <button
@@ -805,17 +810,20 @@ export function ChatInterface() {
             >
               <span className="text-slate-500">Model:</span>
               <span className="text-blue-300">
-                {AI_MODELS.find(m => m.id === selectedModel)?.name || "Select"}
+                {AI_MODELS.find((m) => m.id === selectedModel)?.name ||
+                  "Select"}
               </span>
-              <ChevronDown className={`h-3 w-3 transition-transform ${modelDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`h-3 w-3 transition-transform ${modelDropdownOpen ? "rotate-180" : ""}`}
+              />
             </button>
-            
+
             {modelDropdownOpen && (
               <>
                 {/* Backdrop */}
-                <div 
-                  className="fixed inset-0 z-40" 
-                  onClick={() => setModelDropdownOpen(false)} 
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setModelDropdownOpen(false)}
                 />
                 {/* Dropdown Menu */}
                 <div className="absolute right-0 top-full mt-1 z-50 min-w-[200px] glass-card rounded-lg border border-blue-700/30 shadow-xl overflow-hidden">
@@ -824,11 +832,15 @@ export function ChatInterface() {
                       key={model.id}
                       onClick={() => handleModelChange(model.id)}
                       className={`w-full px-3 py-2 text-left text-xs hover:bg-blue-900/30 transition-colors flex items-center justify-between ${
-                        selectedModel === model.id ? 'bg-blue-900/20 text-blue-300' : 'text-slate-300'
+                        selectedModel === model.id
+                          ? "bg-blue-900/20 text-blue-300"
+                          : "text-slate-300"
                       }`}
                     >
                       <span>{model.name}</span>
-                      <span className="text-slate-500 text-[10px]">{model.provider}</span>
+                      <span className="text-slate-500 text-[10px]">
+                        {model.provider}
+                      </span>
                     </button>
                   ))}
                 </div>
