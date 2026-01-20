@@ -4,6 +4,8 @@
 
 #### A lightweight, free, file-based chat agent that answers questions from your custom knowledge files. No vector databases, no embeddings, no complex setup - just drop in your markdown files and start chatting.
 
+<kbd>env variables needed: OPENROUTER_API_KEY, NEXT_PUBLIC_SITE_URL</kbd>
+
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/eed43d7b-1406-45f2-a5e9-3fab43dd76f2" />
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/f99bead4-f62a-4b5b-bdb0-c196d15beaee" />
 
@@ -27,7 +29,7 @@ Knowledge-Assistant takes a simpler approach:
 
 Perfect for: documentation sites, GitHub repos, personal knowledge bases, and projects where simplicity beats complexity.
 
-<kbd>env variables needed: OPENROUTER_API_KEY, NEXT_PUBLIC_SITE_URL</kbd>
+### Key Features
 
 - **Multiple Free Models** - Choose from Llama 3.3, Mimo, DeepSeek R1, Devstral, GLM
 - **Temperature Control** - Adjust creativity (0 = precise, 2 = creative)
