@@ -36,6 +36,26 @@ const AI_MODELS = [
     name: "Llama 3.3 70B",
     provider: "Meta",
   },
+  {
+    id: "mistralai/devstral-2512:free",
+    name: "Devstral 2",
+    provider: "Mistral",
+  },
+  {
+    id: "deepseek/deepseek-r1-0528:free",
+    name: "DeepSeek R1",
+    provider: "DeepSeek",
+  },
+  {
+    id: "qwen/qwen3-coder:free",
+    name: "Qwen3 Coder",
+    provider: "Qwen",
+  },
+  {
+    id: "z-ai/glm-4.5-air:free",
+    name: "GLM 4.5 Air",
+    provider: "Z.AI",
+  },
 ];
 
 const DEFAULT_MODEL = AI_MODELS[0].id;
